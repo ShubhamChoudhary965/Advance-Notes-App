@@ -1,44 +1,70 @@
-import React, { useEffect, useState } from 'react'
-import { useParams, useSearchParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { addToNotes, updateToNotes } from '../redux/notesSlice';
+import { Copy } from "lucide-react";
+import toast from "react-hot-toast";
+import React from 'react'
+import { useParams} from 'react-router-dom';
+import {useSelector } from 'react-redux';
 
 const ViewNotes = () => {
 
     const {id} = useParams();
     const allNotes = useSelector((state) => state.notes.notes);
     const note = allNotes.filter((p) => p._id === id)[0];
-    console.log("notes are" , note)
 
   return (
-    <>
-        <div>
-        <input
-        className='p-4 border rounded-xl mr-5'
-            type="text"
-            placeholder="Enter Your Title Here"
-            value={note.title}
-            disabled
-            onChange={(e) => setTitle(e.target.value)}
-        />
-        {/* <button onClick={createNotes} className='p-4 border'>
-            {
-                notesId ? "Update My Notes" : "Create My Notes"
-            }
-        </button> */}
-    </div>
+    <div className="w-full h-full py-10 max-w-[1200px] mx-auto px-5 lg:px-0">
+    <div className="flex flex-col gap-y-5 items-start">
+      <input
+        type="text"
+        placeholder="Title"
+        value={note.title}
+        disabled
+        className="w-full text-black border border-input rounded-md p-2 font-bold text-xl"
+      />
+      <div
+        className={`w-full flex flex-col items-start relative rounded bg-opacity-10 border border-[rgba(128,121,121,0.3)] backdrop-blur-2xl`}
+      >
+        <div
+          className={`w-full rounded-t flex items-center justify-between gap-x-4 px-4 py-2 border-b border-[rgba(128,121,121,0.3)]`}
+        >
+          <div className="w-full flex gap-x-[6px] items-center select-none group">
+            <div className="w-[13px] h-[13px] rounded-full flex items-center justify-center p-[1px] overflow-hidden bg-[rgb(255,95,87)]" />
 
-    <div className='mt-8'>
+            <div
+              className={`w-[13px] h-[13px] rounded-full flex items-center justify-center p-[1px] overflow-hidden bg-[rgb(254,188,46)]`}
+            />
+
+            <div className="w-[13px] h-[13px] rounded-full flex items-center justify-center p-[1px] overflow-hidden bg-[rgb(45,200,66)]" />
+          </div>
+          <div
+            className={`w-fit rounded-t flex items-center justify-between gap-x-4 px-4`}
+          >
+            <button
+              className={`flex justify-center items-center  transition-all duration-300 ease-in-out group`}
+              onClick={() => {
+                navigator.clipboard.writeText(note.content);
+                toast.success("Copied to Clipboard", {
+                    position: "top-right",
+                  });
+              }}
+            >
+              <Copy className="group-hover:text-sucess-500" size={20} />
+            </button>
+          </div>
+        </div>
+
         <textarea
-            className='rounded-2xl min-w-[500px] p-6 border'
-            placeholder="Enter Your Notes Here"
-            value={note.content}
-            disabled
-            onChange={(e) => setValue(e.target.value)}
-            rows={20}
+          value={note.content}
+          disabled
+          placeholder="Write Your Content Here...."
+          className="w-full p-3  focus-visible:ring-0 font-semibold text-m"
+          style={{
+            caretColor: "#000",
+          }}
+          rows={20}
         />
+      </div>
     </div>
-    </>
+  </div>
   )
 }
 

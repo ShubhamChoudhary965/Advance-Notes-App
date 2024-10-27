@@ -1,8 +1,10 @@
+import { Calendar, Copy, Eye, PencilLine, Trash2 } from "lucide-react";
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { removeFromNotes } from '../redux/notesSlice';
 import toast from 'react-hot-toast';
 import { NavLink } from 'react-router-dom';
+import { FormatDate } from "../utlis/formatDate";
 
 const Notes = () => {
 
@@ -21,50 +23,98 @@ const Notes = () => {
     }
 
     return (
-        <div>
-            <input
-                className='p-3 rounded-2xl min-w-[600px] mt-5'
-                type="search"
-                placeholder='search here'
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)} // it is for search term
-            />
-            <div className='flex flex-col gap-5 mt-5'>
-                {
-                    filteredData.length > 0 &&
-                    filteredData.map((notes) => {
-                        return (
-                            <div className='border' key={notes?._id}>
-                                <div>
-                                    <h1 className='text-2xl'>{notes.title}</h1>
-                                </div>
-                                <div>
-                                    {notes.content}
-                                </div>
-                                <div className='flex flex-row place-content-evenly'>
-                                    <button>
-                                    <NavLink to={`/?notesId=${notes?._id}`}>Edit</NavLink>
-                                    </button>
-                                    <button>
-                                        <NavLink to={`/notes/${notes?._id}`}>View</NavLink>
-                                    </button>
-                                    <button onClick={() => handleDelete(notes?._id)}>Delete</button>
-                                    <button onClick={() => {
-                                        navigator.clipboard.writeText(notes?.content)
-                                        toast.success("Copied to clipboard")
-                                    }}>Copy</button>
-                                    <button>Share</button>
-                                </div>
-                                <div>
-                                    {notes.createdAt}
-                                </div>
-                            </div>
-                        )
-                    })
-                }
-            </div>
-
+        <div className="w-full h-full py-10 max-w-[1200px] mx-auto px-5 lg:px-0">
+      <div className="flex flex-col gap-y-3">
+        <div className="w-full flex gap-3 px-4 py-2  rounded-[0.3rem] border border-[rgba(128,121,121,0.3)]  mt-6">
+          <input
+            type="search"
+            placeholder="Search notes here..."
+            className="focus:outline-none w-full bg-transparent p-1 text-lg font-semibold"
+            value={searchTerm} // Bind the input to searchTerm state
+            onChange={(e) => setSearchTerm(e.target.value)} // Update searchTerm on input change
+          />
         </div>
+
+        <div className="flex flex-col border border-[rgba(128,121,121,0.3)] py-4 rounded-[0.4rem]">
+          <h2 className="px-4 text-4xl font-bold border-b border-[rgba(128,121,121,0.3)] pb-4">
+            All Notes
+          </h2>
+          <div className="w-full px-4 pt-4 flex flex-col gap-y-5">
+            {filteredData.length > 0 ? (
+                filteredData.map((notes) => (
+                <div
+                  key={notes?._id}
+                  className="border border-[rgba(128,121,121,0.3)] w-full gap-y-6 justify-between flex flex-col sm:flex-row p-4 rounded-[0.3rem]"
+                >
+                  <div className="w-[50%] flex flex-col space-y-3">
+                    <p className="text-4xl font-bold text-purple-700">{notes?.title}</p>
+                    <p className="text-lg font-normal line-clamp-3 max-w-[80%] text-[#f55d33]">
+                      {notes?.content}
+                    </p>
+                  </div>
+
+                  <div className="flex flex-col gap-y-4 sm:items-end">
+                    <div className="flex gap-2 flex-wrap sm:flex-nowrap">
+                      <button
+                        className="p-2 rounded-[0.2rem] bg-white border border-[#c7c7c7]  hover:bg-transparent group hover:border-blue-500"
+                      >
+                        <NavLink to={`/?notesId=${notes?._id}`}>
+                          <PencilLine
+                            className="text-black group-hover:text-blue-500"
+                            size={20}
+                          />
+                        </NavLink>
+                      </button>
+                      <button
+                        className="p-2 rounded-[0.2rem] bg-white border border-[#c7c7c7]  hover:bg-transparent group hover:border-pink-500"
+                        onClick={() => handleDelete(notes?._id)}
+                      >
+                        <Trash2
+                          className="text-black group-hover:text-pink-500"
+                          size={20}
+                        />
+                      </button>
+
+                      <button className="p-2 rounded-[0.2rem] bg-white border border-[#c7c7c7]  hover:bg-transparent group hover:border-orange-500">
+                        <NavLink to={`/notes/${notes?._id}`} target="_blank">
+                          <Eye
+                            className="text-black group-hover:text-orange-500"
+                            size={20}
+                          />
+                        </NavLink>
+                      </button>
+                      <button
+                        className="p-2 rounded-[0.2rem] bg-white border border-[#c7c7c7]  hover:bg-transparent group hover:border-green-500"
+                        onClick={() => {
+                          navigator.clipboard.writeText(notes?.content);
+                          toast.success("Copied to Clipboard", {
+                    position: "top-right",
+                  });
+                        }}
+                      >
+                        <Copy
+                          className="text-black group-hover:text-green-500"
+                          size={20}
+                        />
+                      </button>
+                    </div>
+
+                    <div className="gap-x-2 flex ">
+                      <Calendar className="text-black" size={20} />
+                      {FormatDate(notes?.createdAt)}
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="text-2xl text-center w-full text-chileanFire-500">
+                No Data Found
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
     )
 }
 

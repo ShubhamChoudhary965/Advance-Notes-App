@@ -11,13 +11,10 @@ export const notesSlice = createSlice({
   reducers: {
     addToNotes: (state, action) => { // is action mein humara poora page aa raha hai
       const notes = action.payload;  // yaha pe humne page nikal liya using payload
-      const index = state.notes.findIndex((note) => note.id === notes.id); // check thst page is already available or not using index of the array, if not then we add th page
 
-      if (index >= 0) {
       state.notes.push(notes);
       localStorage.setItem("notes", JSON.stringify(state.notes));
       toast.success("Notes created Succesfully");
-      }
     },
     updateToNotes: (state, action) => {
       const notes = action.payload;
