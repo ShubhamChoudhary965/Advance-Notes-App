@@ -11,10 +11,9 @@ export const notesSlice = createSlice({
   reducers: {
     addToNotes: (state, action) => { // is action mein humara poora page aa raha hai
       const notes = action.payload;  // yaha pe humne page nikal liya using payload
-
-      state.notes.push(notes);
-      localStorage.setItem("notes", JSON.stringify(state.notes));
-      toast.success("Notes created Succesfully");
+        state.notes.push(notes);
+        localStorage.setItem("notes", JSON.stringify(state.notes));
+        toast.success("Notes created Succesfully");
     },
     updateToNotes: (state, action) => {
       const notes = action.payload;
